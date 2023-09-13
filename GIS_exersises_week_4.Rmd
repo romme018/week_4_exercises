@@ -21,7 +21,11 @@ All the data is the shared OneDrive under Week_4 and include...
 - STEER_Boundary
 - ProposedMooringLocations
 
-And one .csv 
+1 raster dataset
+
+- steer_1m
+
+1 .csv 
 
 - sttstj_ncrmp_hab.csv
 
@@ -29,15 +33,23 @@ And one .csv
 
 
 ### Part 1
-1. Import all the data into your project directory.  
+1. Import all the data into your project directory (3 shapefiles and raster dataset).  
 2. Create a shapefile (point) from the sttstj_ncrmp_hab.csv
 3. Clip the NOAA habitat map feature using the STEER boundary feature.  We only want to work with data inside the STEER reserve.
 4. Change the symbology of this new layer to show unique colors for each 'HABITAT'.
 5. What is the area (m^2^) of "Coral Reef and Colonized Hardbottom" habitat classification within STEER?
 6. Select all the NCRMP sites samples within STEER and create a new layer from selection.
 7. Change the symbology to 'graduated symbols' on the AVG_HARD_REIEF field (this field is an in-situ habitat rugosity metric).  Adjust the parameters to show NCRMP sites inside STEER with varying degrees of rugosity.
+
+##### Bonus
+8. Create a hillshade of the 2 meter raster dataset.  Make multiple hillshades using different parameters (Azimuth, Altitude, Z Factor) so see the differences. 
+9. In the contents pane, place the depth raster layer on top of the hillsahde layer.  Adjust the symbology and transparecy of the depth raster until you like the outcome. 
 <br></br>
 
 ### Part 2
 
 In this fictional scenario, you are tasked with selecting from a large list of mooring locations inside STEER from the  ProposedMooringLocations shapefile all the locations that are at least 50m away from any mapped coral reef or colonized hardbottom.  There are multiple ways you could solve this task, but I would like for you to use the buffer tool.  DPNR only has enough funding for 5 moorings.  Which 5 would you propose DPNR install?  Adjust the symbology for all the layers to make it clear which locations are appropriate and which 5 locations you are proposing as ideal.  
+
+##### Bonus
+
+Along with mooring locations being at least 50m away from mapped coral reef or colonized hardbottom, mooring locations must be shallower than 10m depth.  Propose new 'best' site locations.  

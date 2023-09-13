@@ -373,7 +373,11 @@ additional work and create map layouts.</p>
 <li>STEER_Boundary</li>
 <li>ProposedMooringLocations</li>
 </ul>
-<p>And one .csv</p>
+<p>1 raster dataset</p>
+<ul>
+<li>steer_1m</li>
+</ul>
+<p>1 .csv</p>
 <ul>
 <li>sttstj_ncrmp_hab.csv</li>
 </ul>
@@ -381,7 +385,8 @@ additional work and create map layouts.</p>
 <div id="part-1" class="section level3">
 <h3>Part 1</h3>
 <ol style="list-style-type: decimal">
-<li>Import all the data into your project directory.<br />
+<li>Import all the data into your project directory (3 shapefiles and
+raster dataset).<br />
 </li>
 <li>Create a shapefile (point) from the sttstj_ncrmp_hab.csv</li>
 <li>Clip the NOAA habitat map feature using the STEER boundary feature.
@@ -395,8 +400,19 @@ layer from selection.</li>
 <li>Change the symbology to ‘graduated symbols’ on the AVG_HARD_REIEF
 field (this field is an in-situ habitat rugosity metric). Adjust the
 parameters to show NCRMP sites inside STEER with varying degrees of
-rugosity. <br /></li>
+rugosity.</li>
 </ol>
+<div id="bonus" class="section level5">
+<h5>Bonus</h5>
+<ol start="8" style="list-style-type: decimal">
+<li>Create a hillshade of the 2 meter raster dataset. Make multiple
+hillshades using different parameters (Azimuth, Altitude, Z Factor) so
+see the differences.</li>
+<li>In the contents pane, place the depth raster layer on top of the
+hillsahde layer. Adjust the symbology and transparecy of the depth
+raster until you like the outcome. <br><br></li>
+</ol>
+</div>
 </div>
 <div id="part-2" class="section level3">
 <h3>Part 2</h3>
@@ -409,6 +425,14 @@ the buffer tool. DPNR only has enough funding for 5 moorings. Which 5
 would you propose DPNR install? Adjust the symbology for all the layers
 to make it clear which locations are appropriate and which 5 locations
 you are proposing as ideal.</p>
+<div id="bonus-1" class="section level5">
+<h5>Bonus</h5>
+<p>Along with mooring locations being at least 50m away from mapped
+coral reef or colonized hardbottom, mooring locations must be shallower
+than 10m depth. Propose new ‘best’ site locations. Hint…“Extract Values
+to Points”, or “Extract Multi Values to Points” (What is the
+difference?)</p>
+</div>
 </div>
 </div>
 
