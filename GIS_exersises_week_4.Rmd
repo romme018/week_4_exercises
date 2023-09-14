@@ -44,7 +44,7 @@ All the data is the shared OneDrive under Week_4 and include...
 ##### Bonus
 8. Create a hillshade of the 2 meter raster dataset.  Make multiple hillshades using different parameters (Azimuth, Altitude, Z Factor) so see the differences. 
 9. In the contents pane, place the depth raster layer on top of the hillsahde layer.  Adjust the symbology and transparecy of the depth raster until you like the outcome. 
-<br></br>
+<br><br>
 
 ### Part 2
 
@@ -52,4 +52,4 @@ In this fictional scenario, you are tasked with selecting from a large list of m
 
 ##### Bonus
 
-Along with mooring locations being at least 50m away from mapped coral reef or colonized hardbottom, mooring locations must be shallower than 10m depth.  Propose new 'best' site locations.  
+Along with mooring locations being at least 50m away from mapped coral reef or colonized hardbottom, mooring locations must be shallower than 10m depth.  Propose new 'best' site locations.  Hint..."Extract Values to Points", or "Extract Multi Values to Points" (What is the difference?)
