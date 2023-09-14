@@ -3,10 +3,12 @@ title: "Week 4 Exercises"
 author: "J.Blondeau"
 date: "2023-09-09"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 This week we will continue wrangling data in the Tidyverse.  The following are some very common functions you will use in your everyday data world.
@@ -22,20 +24,60 @@ All the exercises for this week use the "PSU_Fish_Density.csv" and the "taxonomi
 
 1. Add the common name (only common name) of each species in the density data set as a new field.  
     - Reorder the columns to be more readable.
+    
+```{r}
+density<-read.csv("data/PSU_Fish_Density.csv")
+tax<-read.csv("data/taxonomic_data.csv")
+
+library(tidyverse)
+
+density1<-left_join(density,tax, by="SPECIES_CD")
+
+density1<-density1%>%select(YEAR, REGION, STRAT, PROT, PRIMARY_SAMPLE_UNIT,SPECIES_CD,COMNAME,density)
+```
+
 
 2. Add a new field to the density data set named "fishery_target" at set all to TRUE
+```{r}
+density1<-density1%>%
+  mutate(fishery_target=TRUE)
+```
 
 3. Add a new field named "group" at set the value based on fish species where...
     - grouper = Coney, Red hind, 
     - sanpper = Mutton, Gray, Yellowtail
     - parrotfish = Stoplight
     - other = Triggerfish, Hogfish
+```{r}
+density1<-density1%>%
+  mutate(group=case_when(COMNAME%in% c("coney","red hind")~"grouper",
+                  COMNAME%in%c("mutton snapper","gray snapper","yellowtail snapper")~"snapper",
+                      COMNAME%in%c("stoplight parrotfish")~"parrotfish",
+                      COMNAME%in%c("triggerfish","hogfish")~"other"
+                        ))
+
+```
     
 4. Using the group_by function, how many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR?
+```{r}
+
+psu<-density1%>%group_by(YEAR)%>%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))
+#237 in 2017, 322 in 2019, 165 in 2021
+
+```
 
 5. How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR and PROT combination?
+```{r}
+psuprot<-density1%>%group_by(YEAR,PROT)%>%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))
+```
 
 6. How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR, PROT and STRAT combination?
+```{r}
+psu5<-density1%>%group_by(YEAR,PROT,STRAT)%>%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))
+```
 
 7. What is the difference between the following two expressions?  The summarize and mutate calls after the group_by do very different things.  In what situations would you use them?
     
@@ -57,11 +99,26 @@ All the exercises for this week use the "PSU_Fish_Density.csv" and the "taxonomi
       ----- | ----------  | -----------
       2017  | BAL VETU    |    0.224   
       2019  | CEP FULV    |    0.685
+```{r}
+mean<-density1%>%group_by(YEAR,SPECIES_CD)%>%
+  summarise(mean(density))
+```
       
 9. Create a new dataframe that shows mean density of each species in each PROT per year...hint
     - YEAR  | SPECIES_CD  | PROT | meanDensity
       ----- | ----------  | -----|-----------
       2017  | BAL VETU    | 0    |0.229  
       2019  | CEP FULV    | 1    |0.308
+```{r}
+mean1<-density1%>%group_by(YEAR, SPECIES_CD,PROT)%>%
+  summarise(mean(density))
+```
 
 10. In the "PSU_Fish_Density.csv" data set, the PROT field refers to sites that are inside the VI National Park (PROT = 1) and sites that are outside the Park (PROT = 0).  How many of the 8 species had higher densities inside the National Park?
+
+```{r}
+mean3<-density1%>%group_by(PROT, SPECIES_CD)%>%
+  summarise(mean(density))
+
+```
+

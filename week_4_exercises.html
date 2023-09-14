@@ -299,17 +299,23 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+content: "";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "\e258";
-font-family: 'Glyphicons Halflings';
+content: "";
 border: none;
+}
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "";
+font-family: 'Glyphicons Halflings';
+display: inline-block;
+padding: 10px;
+border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -370,27 +376,73 @@ data world.</p>
 <p>All the exercises for this week use the “PSU_Fish_Density.csv” and
 the “taxonomic_data.csv” data sets.</p>
 <ol style="list-style-type: decimal">
-<li><p>Add the common name (only common name) of each species in the
-density data set as a new field.</p>
+<li>Add the common name (only common name) of each species in the
+density data set as a new field.
 <ul>
 <li>Reorder the columns to be more readable.</li>
 </ul></li>
-<li><p>Add a new field to the density data set named “fishery_target” at
-set all to TRUE</p></li>
-<li><p>Add a new field named “group” at set the value based on fish
-species where…</p>
+</ol>
+<pre class="r"><code>density&lt;-read.csv(&quot;data/PSU_Fish_Density.csv&quot;)
+tax&lt;-read.csv(&quot;data/taxonomic_data.csv&quot;)
+
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.3      ✔ purrr   1.0.2 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.3.0      ✔ stringr 1.5.0 
+## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>density1&lt;-left_join(density,tax, by=&quot;SPECIES_CD&quot;)
+
+density1&lt;-density1%&gt;%select(YEAR, REGION, STRAT, PROT, PRIMARY_SAMPLE_UNIT,SPECIES_CD,COMNAME,density)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Add a new field to the density data set named “fishery_target” at
+set all to TRUE</li>
+</ol>
+<pre class="r"><code>density1&lt;-density1%&gt;%
+  mutate(fishery_target=TRUE)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Add a new field named “group” at set the value based on fish species
+where…
 <ul>
 <li>grouper = Coney, Red hind,</li>
 <li>sanpper = Mutton, Gray, Yellowtail</li>
 <li>parrotfish = Stoplight</li>
 <li>other = Triggerfish, Hogfish</li>
 </ul></li>
-<li><p>Using the group_by function, how many unique PRIMARY_SAMPLE_UNITS
-were sampled in each YEAR?</p></li>
-<li><p>How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR
-and PROT combination?</p></li>
-<li><p>How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR,
-PROT and STRAT combination?</p></li>
+</ol>
+<pre class="r"><code>density1&lt;-density1%&gt;%
+  mutate(group=case_when(COMNAME%in% c(&quot;coney&quot;,&quot;red hind&quot;)~&quot;grouper&quot;,
+                  COMNAME%in%c(&quot;mutton snapper&quot;,&quot;gray snapper&quot;,&quot;yellowtail snapper&quot;)~&quot;snapper&quot;,
+                      COMNAME%in%c(&quot;stoplight parrotfish&quot;)~&quot;parrotfish&quot;,
+                      COMNAME%in%c(&quot;triggerfish&quot;,&quot;hogfish&quot;)~&quot;other&quot;
+                        ))</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Using the group_by function, how many unique PRIMARY_SAMPLE_UNITS
+were sampled in each YEAR?</li>
+</ol>
+<pre class="r"><code>psu&lt;-density1%&gt;%group_by(YEAR)%&gt;%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))
+#237 in 2017, 322 in 2019, 165 in 2021</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR and
+PROT combination?</li>
+</ol>
+<pre class="r"><code>psuprot&lt;-density1%&gt;%group_by(YEAR,PROT)%&gt;%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;YEAR&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>How many unique PRIMARY_SAMPLE_UNITS were sampled in each YEAR, PROT
+and STRAT combination?</li>
+</ol>
+<pre class="r"><code>psu5&lt;-density1%&gt;%group_by(YEAR,PROT,STRAT)%&gt;%
+  summarise(length(unique(PRIMARY_SAMPLE_UNIT)))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;YEAR&#39;, &#39;PROT&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<ol start="7" style="list-style-type: decimal">
 <li><p>What is the difference between the following two expressions? The
 summarize and mutate calls after the group_by do very different things.
 In what situations would you use them?</p>
@@ -426,8 +478,14 @@ per year…hint</p>
 </tbody>
 </table></li>
 </ul></li>
-<li><p>Create a new dataframe that shows mean density of each species in
-each PROT per year…hint</p>
+</ol>
+<pre class="r"><code>mean&lt;-density1%&gt;%group_by(YEAR,SPECIES_CD)%&gt;%
+  summarise(mean(density))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;YEAR&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<ol start="9" style="list-style-type: decimal">
+<li>Create a new dataframe that shows mean density of each species in
+each PROT per year…hint
 <ul>
 <li><table>
 <thead>
@@ -454,11 +512,21 @@ each PROT per year…hint</p>
 </tbody>
 </table></li>
 </ul></li>
-<li><p>In the “PSU_Fish_Density.csv” data set, the PROT field refers to
+</ol>
+<pre class="r"><code>mean1&lt;-density1%&gt;%group_by(YEAR, SPECIES_CD,PROT)%&gt;%
+  summarise(mean(density))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;YEAR&#39;, &#39;SPECIES_CD&#39;. You can override
+## using the `.groups` argument.</code></pre>
+<ol start="10" style="list-style-type: decimal">
+<li>In the “PSU_Fish_Density.csv” data set, the PROT field refers to
 sites that are inside the VI National Park (PROT = 1) and sites that are
 outside the Park (PROT = 0). How many of the 8 species had higher
-densities inside the National Park?</p></li>
+densities inside the National Park?</li>
 </ol>
+<pre class="r"><code>mean3&lt;-density1%&gt;%group_by(PROT, SPECIES_CD)%&gt;%
+  summarise(mean(density))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;PROT&#39;. You can override using the
+## `.groups` argument.</code></pre>
 
 
 
